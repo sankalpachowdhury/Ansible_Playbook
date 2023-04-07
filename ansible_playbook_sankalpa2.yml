@@ -1,0 +1,60 @@
+- name: Create Azure Virtual Machine
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: Create Azure Virtual Machine
+      azure_rm_virtualmachine:
+        subscription_id: <subscription_id>
+        client_id: <client_id>
+        client_secret: <client_secret>
+        tenant: <tenant_id>
+        resource_group: <resource_group_name>
+        name: <vm_name>
+        admin_username: <admin_username>
+        authentication_type: ssh
+        ssh_public_keys:
+          path: ~/.ssh/id_rsa.pub
+          key_data: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+        location: eastus
+        vm_size: Standard_B2ms
+        image:
+          offer: UbuntuServer
+          publisher: Canonical
+          sku: 20.04-LTS
+          version: latest
+        os_disk_type: Standard_HDD
+        security_type: Standard
+        inbound_ports:
+          - "22"
+          - "80"
+          - "443"
+        outbound_ports: "*"
+        security_group_rules:
+          - name: SSH
+            protocol: Tcp
+            destination_port_range: "22"
+            access: Allow
+            priority: 100
+            direction: Inbound
+          - name: HTTP
+            protocol: Tcp
+            destination_port_range: "80"
+            access: Allow
+            priority: 101
+            direction: Inbound
+          - name: HTTPS
+            protocol: Tcp
+            destination_port_range: "443"
+            access: Allow
+            priority: 102
+            direction: Inbound
+          - name: All
+            protocol: "*"
+            access: Allow
+            priority: 200
+            direction: Outbound
+      register: result
+
+    - name: Display VM details
+      debug:
+        var: result
