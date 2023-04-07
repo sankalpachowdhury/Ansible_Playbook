@@ -1,19 +1,31 @@
 The placeholders in the Ansible playbook refer to the values that you need to provide to configure and create the Azure virtual machine. Here's a brief description of each placeholder and where you can obtain the corresponding values:
 
-<subscription_id>: This is your Azure subscription ID, which you can obtain from the Azure portal or through Azure CLI commands. You can also find it in the "Subscriptions" section under the "All services" menu in the Azure portal.
 
-<client_id>: This is the client ID (also known as application ID) of the Azure AD application that you have registered to authenticate with Azure. You can obtain it from the "App registrations" section in the Azure portal.
+-- <subscription_id>: This is your Azure subscription ID, which you can obtain from the Azure portal or through Azure CLI commands. 
+You can also find it in the "Subscriptions" section under the "All services" menu in the Azure portal.
 
-<client_secret>: This is the client secret (also known as application secret) associated with the Azure AD application. You can generate it in the "Certificates & secrets" section under the "Manage" menu of the Azure AD application in the Azure portal.
+-- <client_id>: This is the client ID (also known as application ID) of the Azure AD application that you have registered to authenticate with Azure. 
+You can obtain it from the "App registrations" section in the Azure portal.
 
-<tenant_id>: This is the tenant ID (also known as directory ID) of your Azure AD tenant, which uniquely identifies your Azure AD directory. You can find it in the "Azure Active Directory" section in the Azure portal.
+-- <client_secret>: This is the client secret (also known as application secret) associated with the Azure AD application. 
+You can generate it in the "Certificates & secrets" section under the "Manage" menu of the Azure AD application in the Azure portal.
 
-<resource_group_name>: This is the name of the Azure resource group where you want to create the virtual machine. You can specify an existing resource group or create a new one. Resource group names must be unique within an Azure subscription.
+-- <tenant_id>: This is the tenant ID (also known as directory ID) of your Azure AD tenant, which uniquely identifies your Azure AD directory. 
+You can find it in the "Azure Active Directory" section in the Azure portal.
 
-<vm_name>: This is the desired name for the virtual machine that you want to create in Azure. You can choose any valid name that meets Azure naming conventions, such as lowercase letters, numbers, and hyphens.
+-- <resource_group_name>: This is the name of the Azure resource group where you want to create the virtual machine. 
+You can specify an existing resource group or create a new one. Resource group names must be unique within an Azure subscription.
 
-<admin_username>: This is the desired username for the admin user account on the virtual machine. You can specify any username that you want to use for logging in to the virtual machine.
+-- <vm_name>: This is the desired name for the virtual machine that you want to create in Azure. 
+You can choose any valid name that meets Azure naming conventions, such as lowercase letters, numbers, and hyphens.
 
-<admin_password>: This is the desired password for the admin user account on the virtual machine. You can specify any strong password that you want to use for the admin user account. Alternatively, you can use SSH public key authentication instead of a password by providing the path to your SSH public key in the playbook, as shown in the example playbook in the previous response.
+-- <admin_username>: This is the desired username for the admin user account on the virtual machine. 
+You can specify any username that you want to use for logging in to the virtual machine.
 
-Note: It's important to keep your Azure credentials and other sensitive information secure and not share them with others. If possible, consider using Ansible vault or other secure methods to store and manage your credentials securely.
+-- <admin_password>: This is the desired password for the admin user account on the virtual machine. 
+You can specify any strong password that you want to use for the admin user account. 
+Alternatively, you can use SSH public key authentication instead of a password by providing the path to your SSH public key in the playbook, 
+as shown in the example playbook in the previous response.
+
+Note: It's important to keep your Azure credentials and other sensitive information secure and not share them with others. 
+If possible, consider using Ansible vault or other secure methods to store and manage your credentials securely.
