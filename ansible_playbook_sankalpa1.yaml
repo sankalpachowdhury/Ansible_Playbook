@@ -1,0 +1,110 @@
+---
+- name: Create Virtual Machine
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: Create Resource Group
+      azure_rm_resourcegroup:
+        name: myResourceGroup
+        location: eastus
+        state: present
+      register: rg_result
+
+    - name: Create Virtual Network
+      azure_rm_virtualnetwork:
+        name: myVirtualNetwork
+        resource_group: myResourceGroup
+        location: eastus
+        address_prefixes: 10.0.0.0/16
+        state: present
+      register: vnet_result
+
+    - name: Create Subnet
+      azure_rm_subnet:
+        name: mySubnet
+        resource_group: myResourceGroup
+        virtual_network_name: myVirtualNetwork
+        address_prefix: 10.0.0.0/24
+        state: present
+      register: subnet_result
+
+    - name: Create Public IP Address
+      azure_rm_publicipaddress:
+        name: myPublicIP
+        resource_group: myResourceGroup
+        location: eastus
+        allocation_method: Dynamic
+        state: present
+      register: public_ip_result
+
+    - name: Create Network Security Group
+      azure_rm_securitygroup:
+        name: myNetworkSecurityGroup
+        resource_group: myResourceGroup
+        location: eastus
+        security_rules:
+          - name: SSH
+            protocol: Tcp
+            destination_port_range: 22
+            access: Allow
+          - name: HTTP
+            protocol: Tcp
+            destination_port_range: 80
+            access: Allow
+          - name: HTTPS
+            protocol: Tcp
+            destination_port_range: 443
+            access: Allow
+        state: present
+      register: nsg_result
+
+    - name: Create Virtual Network Interface
+      azure_rm_networkinterface:
+        name: myNIC
+        resource_group: myResourceGroup
+        location: eastus
+        virtual_network_name: myVirtualNetwork
+        subnet_name: mySubnet
+        public_ip_name: myPublicIP
+        security_group_name: myNetworkSecurityGroup
+        state: present
+      register: nic_result
+
+    - name: Create Virtual Machine
+      azure_rm_virtualmachine:
+        name: myVM
+        resource_group: myResourceGroup
+        location: eastus
+        vm_size: Standard_B2ms
+        admin_username: myuser
+        ssh_public_keys:
+          - path: /home/myuser/.ssh/authorized_keys
+            key_data: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+        os_disk_caching: ReadWrite
+        os_disk_storage_account_type: Standard_LRS
+        image:
+          offer: UbuntuServer
+          publisher: Canonical
+          sku: 20.04-LTS-gen2
+          version: latest
+        network_interfaces:
+          - name: myNIC
+            primary: yes
+        state: present
+      register: vm_result
+
+    - name: Show Public IP Address
+      debug:
+        var: public_ip_result.public_ip_address.ip_address
+
+    - name: Show SSH Private Key
+      debug:
+        var: lookup('file', '~/.ssh/id_rsa')
+
+    - name: Show SSH Public Key
+      debug:
+        var: lookup('file', '~/.ssh/id_rsa.pub')
+
+    - name: Show Virtual Machine Details
+      debug:
+        var: vm_result.instance
